@@ -108,10 +108,9 @@ public class InstructorMenu {
 			/* Get lecture days and time */
 			while (rs2.next()) {
 				days += rs2.getString(1) + ", ";
-			}
-			/* Assume that lecture time of one lecture is same, regardless of day of the week */
-			for (int i = 0; i < 4; i++) {
-				time[i] = rs2.getInt(i + 2);
+				for (int i = 0; i < 4; i++) {
+					time[i] = rs2.getInt(i + 2);	// Assume that lecture time of one lecture is same, regardless of day of the week
+				}
 			}
 
 			/* Close the connection */
