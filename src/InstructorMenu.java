@@ -8,21 +8,22 @@ import com.tmax.tibero.jdbc.ext.*;
 public class InstructorMenu {
 	static final String driver = "com.tmax.tibero.jdbc.TbDriver";
 	static final String url = "jdbc:tibero:thin:@localhost:8629:tibero";
+	static final String username = "sys";
+	static final String password = "tibero";
 
 	/**
 	 * adviseeReport : the 7th feature of Project3. Print out basic information of advisees.
 	 * @param instID : ID of instructor in integer form (5-digit number in this project)
-	 * @param instName : name of instructor in String form
 	 */
-	public static void adviseeReport(int instID, String instName) throws Exception {
+	public static void adviseeReport(int instID) throws Exception {
 		/* Load and establish connections to database */
 		Class.forName(driver);
-		Connection conn = DriverManager.getConnection(url, "sys", "tibero");
+		Connection conn = DriverManager.getConnection(url, username, password);
 
 		/* Manipulate SQL statements for searching advisee information */
 		PreparedStatement pstmt = conn.prepareStatement(
-				"SELECT S.ID, S.name, S.dept_name, S.tot_cred" + " FROM instructor I JOIN advisor A ON (I.ID = A.i_id)"
-						+ " JOIN student S ON (S.ID = A.s_id)" + " where I.ID = ?"); // Gets information of advisees from (instructor JOIN advisor JOIN student)
+				"SELECT S.ID, S.name, S.dept_name, S.tot_cred" + " FROM advisor A"
+						+ " JOIN student S ON (S.ID = A.s_id)" + " WHERE A.i_id = ?"); // Gets information of advisees from (instructor JOIN advisor JOIN student)
 																						
 		pstmt.setString(1, String.valueOf(instID)); // Inserts the ID of instructor to SQL query
 
@@ -39,7 +40,7 @@ public class InstructorMenu {
 		/* Print results */
 		while (rs.next()) {
 			System.out.println(
-					rs.getInt(1) + "\t\t" + rs.getString(2) + "\t\t" + rs.getString(3) + "\t\t\t" + rs.getInt(4));
+					rs.getString(1) + "\t\t" + rs.getString(2) + "\t\t" + rs.getString(3) + "\t\t\t" + rs.getInt(4));
 		}
 
 		/* Close the connections */
@@ -51,19 +52,18 @@ public class InstructorMenu {
 	/**
 	 * courseReport : the 6th feature of Project3. Prints out information of the most recent semester.
 	 * @param instID : ID of instructor in integer form (5-digit number in this project)
-	 * @param instName : name of instructor in String form
 	 */
-	public static void courseReport(int instID, String instName) throws Exception {
+	public static void courseReport(int instID) throws Exception {
 		/* Load and establish connections to database */
 		Class.forName(driver);
-		Connection conn = DriverManager.getConnection(url, "sys", "tibero");
+		Connection conn = DriverManager.getConnection(url, username, password);
 
 		/* SQL statement used to find lectures of the most recent semester 
 		 * using WITH ... AS clause, ORDER BY clause, CASE clause */
 		String courseSql = "(WITH max_term AS (SELECT * FROM (SELECT year, semester FROM teaches WHERE ID = " + instID
-				+ " ORDER BY year DESC, CASE" + " WHEN substring(semester, 1, 6) IN ('Spring') THEN 1"
-				+ " WHEN substring(semester, 1, 6) IN ('Summer') THEN 2"
-				+ " WHEN substring(semester, 1, 6) IN ('Fall') THEN 3" + " ELSE 4" + " END) WHERE rownum = 1)"
+				+ " ORDER BY year DESC, CASE" + " WHEN substring(semester, 1, 6) IN ('Spring') THEN 4"
+				+ " WHEN substring(semester, 1, 6) IN ('Summer') THEN 3"
+				+ " WHEN substring(semester, 1, 6) IN ('Fall') THEN 2" + " ELSE 1" + " END) WHERE rownum = 1)"
 				+ " SELECT * FROM teaches WHERE ID = " + instID
 				+ " AND year IN (SELECT year FROM max_term) AND semester IN (SELECT semester FROM max_term))";
 
@@ -165,7 +165,7 @@ public class InstructorMenu {
 			if (input.compareTo("quit") == 0) {
 				break;
 			}
-			courseReport(Integer.valueOf(input), "");
+			courseReport(Integer.valueOf(input));
 		}
 	}
 }
