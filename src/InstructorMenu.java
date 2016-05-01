@@ -140,7 +140,7 @@ public class InstructorMenu {
 			 * including their ID, name, dept_name, grade */
 			while (rs3.next()) {
 				System.out.println(rs3.getString(1) + "\t\t" + rs3.getString(2) + "\t\t" + rs3.getString(3) + "\t\t"
-						+ rs3.getString(4));
+						+ (rs3.getString(4) == null ? "" : rs3.getString(4)));
 			}
 
 			/* Close the connection */
