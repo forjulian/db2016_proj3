@@ -1,30 +1,26 @@
-package com.company;
+
 import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.sql.*;
 
 import com.tmax.tibero.jdbc.data.binder.StringBinder;
 import com.tmax.tibero.jdbc.ext.TbDataSource;
 
 
-
 public class Welcome {
-    static final String JDBC_DRIVER = "com.tmax.tibero.jdbc.TbDriver";
-    static final String DATABASE_URL = "jdbc:tibero:thin:@127.0.0.1:8629:tibero";
-
-    static final String USERNAME = "tibero2";
-    static final String PASSWORD = "tibero";
-
     static Connection connection;
     TbDataSource dataSource = new TbDataSource();
 
     private int id;
     private String name;
 
-    public void readInput() {
+    public void readInput() throws Exception {
         try {
-            dataSource.setUser(USERNAME);
-            dataSource.setPassword(PASSWORD);
-            dataSource.setURL(DATABASE_URL);
+            dataSource.setUser(Main.USERNAME);
+            dataSource.setPassword(Main.PASSWORD);
+            dataSource.setURL(Main.DATABASE_URL);
 
             connection = dataSource.getConnection();
             Scanner keyboard = new Scanner(System.in);
@@ -40,7 +36,6 @@ public class Welcome {
                 studentMenu(new Student(id, name));
             } else if(isInstructor(id, name) == 1) {  //Case when instructor is authenticated
                 instructorMenu(new Instructor(id, name));
-                System.out.println("Wrong authentication.");
             } else {
                 System.out.println("Wrong authentication.");
                 readInput();
@@ -55,9 +50,9 @@ public class Welcome {
     public int isStudent(int stud_id, String stud_name){
         int student = 0;
         try {
-            dataSource.setUser(USERNAME);
-            dataSource.setPassword(PASSWORD);
-            dataSource.setURL(DATABASE_URL);
+            dataSource.setUser(Main.USERNAME);
+            dataSource.setPassword(Main.PASSWORD);
+            dataSource.setURL(Main.DATABASE_URL);
 
             connection = dataSource.getConnection();
 
@@ -83,9 +78,9 @@ public class Welcome {
     public int isInstructor(int inst_id, String inst_name){
         int student = 0;
         try {
-            dataSource.setUser(USERNAME);
-            dataSource.setPassword(PASSWORD);
-            dataSource.setURL(DATABASE_URL);
+            dataSource.setUser(Main.USERNAME);
+            dataSource.setPassword(Main.PASSWORD);
+            dataSource.setURL(Main.DATABASE_URL);
 
             connection = dataSource.getConnection();
 
@@ -108,19 +103,47 @@ public class Welcome {
         return student;
     }
 
-    static void studentMenu(Student student){
-        System.out.println("Please select student menu");
-        System.out.println("1) Student report");
-        System.out.println("2) View time table");
-        System.out.println("0) Exit");
-        //TODO: Write the method for each choice
+    static void studentMenu(Student student) throws Exception{
+    	BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		while (true) {
+			System.out.println("Please select student menu");
+	        System.out.println("1) Student report");
+	        System.out.println("2) View time table");
+	        System.out.println("0) Exit");
+	        
+			String input = br.readLine();
+
+			if (input.compareTo("1") == 0) {
+				studentMenu.studentReport(student.getId());
+			} else if (input.compareTo("2") == 0) {
+				studentMenu.viewTimeTable(student.getId());
+			} else if (input.compareTo("0") == 0) {
+				break;
+			} else {
+				return;
+			}
+		}
     }
 
-    static void instructorMenu(Instructor instructor){
-        System.out.println("Please select instructor menu");
-        System.out.println("1) Course report");
-        System.out.println("2) Advisee");
-        System.out.println("0) Exit");
-        //TODO: Write the method for each choice
+    static void instructorMenu(Instructor instructor) throws Exception{
+    	BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		while (true) {
+			System.out.println("Please select instructor menu");
+	        System.out.println("1) Course report");
+	        System.out.println("2) Advisee");
+	        System.out.println("0) Exit");
+	        
+			String input = br.readLine();
+
+			if (input.compareTo("1") == 0) {
+				InstructorMenu.courseReport(instructor.getId());
+			} else if (input.compareTo("2") == 0) {
+				InstructorMenu.adviseeReport(instructor.getId());
+			} else if (input.compareTo("0") == 0) {
+				break;
+			} else {
+				return;
+			}
+		}
     }
 }

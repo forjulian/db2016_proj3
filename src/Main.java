@@ -1,20 +1,22 @@
-package com.company;
+
 import java.sql.*;
 import com.tmax.tibero.jdbc.ext.TbDataSource;
 
 public class Main {
 
-    static final String JDBC_DRIVER = "com.tmax.tibero.jdbc.TbDriver";
-    static final String DATABASE_URL = "jdbc:tibero:thin:@127.0.0.1:8629:tibero";
+    public static final String JDBC_DRIVER = "com.tmax.tibero.jdbc.TbDriver";
+    public static final String HOST = "127.0.0.1";
+    public static final String PORT = "8629";
+    public static final String DATABASE_URL = "jdbc:tibero:thin:@" + HOST + ":" + PORT + ":tibero";
 
     //USERNAME is the username to connect database
-    static final String USERNAME = "tibero2";
+    public static final String USERNAME = "sys";
     //PASSWORD is the password to connect database
-    static final String PASSWORD = "tibero";
+    public static final String PASSWORD = "tibero";
 
     static Connection connection;
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws Exception{
         Welcome welcome = new Welcome();
 
         TbDataSource dataSource = new TbDataSource();

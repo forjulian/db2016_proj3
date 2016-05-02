@@ -1,4 +1,4 @@
-package com.company;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.sql.*;
@@ -6,20 +6,17 @@ import java.sql.*;
 import com.tmax.tibero.jdbc.*;
 import com.tmax.tibero.jdbc.ext.*;
 
-public class InstructorMenu {
-	static final String driver = "com.tmax.tibero.jdbc.TbDriver";
-	static final String url = "jdbc:tibero:thin:@localhost:8629:tibero";
-	static final String username = "sys";
-	static final String password = "tibero";
+/* Written by Jeong Hyunho */
 
+public class InstructorMenu {
 	/**
 	 * adviseeReport : the 7th feature of Project3. Print out basic information of advisees.
 	 * @param instID : ID of instructor in integer form (5-digit number in this project)
 	 */
 	public static void adviseeReport(int instID) throws Exception {
 		/* Load and establish connections to database */
-		Class.forName(driver);
-		Connection conn = DriverManager.getConnection(url, username, password);
+		Class.forName(Main.JDBC_DRIVER);
+		Connection conn = DriverManager.getConnection(Main.DATABASE_URL, Main.USERNAME, Main.PASSWORD);
 
 		/* Manipulate SQL statements for searching advisee information */
 		PreparedStatement pstmt = conn.prepareStatement(
@@ -56,8 +53,8 @@ public class InstructorMenu {
 	 */
 	public static void courseReport(int instID) throws Exception {
 		/* Load and establish connections to database */
-		Class.forName(driver);
-		Connection conn = DriverManager.getConnection(url, username, password);
+		Class.forName(Main.JDBC_DRIVER);
+		Connection conn = DriverManager.getConnection(Main.DATABASE_URL, Main.USERNAME, Main.PASSWORD);
 
 		/* SQL statement used to find lectures of the most recent semester 
 		 * using WITH ... AS clause, ORDER BY clause, CASE clause */
@@ -153,20 +150,5 @@ public class InstructorMenu {
 		rs1.close();
 		stmt1.close();
 		conn.close();
-	}
-
-	/* For debugging. 
-	 * TODO : Remove this before submission.
-	 */
-	public static void main(String[] args) throws Exception {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		while (true) {
-			String input = br.readLine();
-
-			if (input.compareTo("quit") == 0) {
-				break;
-			}
-			courseReport(Integer.valueOf(input));
-		}
 	}
 }

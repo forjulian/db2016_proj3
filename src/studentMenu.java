@@ -1,4 +1,4 @@
-package com.company;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.sql.*;
@@ -9,18 +9,11 @@ import com.tmax.tibero.jdbc.ext.*;
 
 
 /*written by ¿±¡¯¡÷ */
-/*db name-tibero user-sys password-201802*/
 
 public class studentMenu {
-	static final String drive="com.tmax.tibero.jdbc.TbDriver";
-	static final String url="jdbc:tibero:thin:@localhost:8629:tibero";
-	static final String user_name="sys";
-	static final String password="201802";
-
-	
 	public static void studentReport(int stuID) throws SQLException, ClassNotFoundException{
-		Class.forName(drive);
-		Connection conn=DriverManager.getConnection(url,user_name,password);
+		Class.forName(Main.JDBC_DRIVER);
+		Connection conn=DriverManager.getConnection(Main.DATABASE_URL,Main.USERNAME,Main.PASSWORD);
 		
 		PreparedStatement pstmt1 = conn.prepareStatement("SELECT name, dept_name, tot_cred"+" FROM student "+"Where ID=?");
 		pstmt1.setInt(1,stuID);
@@ -82,8 +75,8 @@ public class studentMenu {
 		int i=1,flag=0, year;
 		String seme;
 		Scanner sc = new Scanner(System.in);
-		Class.forName(drive);
-		Connection conn=DriverManager.getConnection(url,user_name,password);
+		Class.forName(Main.JDBC_DRIVER);
+		Connection conn=DriverManager.getConnection(Main.DATABASE_URL,Main.USERNAME,Main.PASSWORD);
 		
 		System.out.println("Please select semester to view");
 		System.out.println();
@@ -140,12 +133,5 @@ public class studentMenu {
 				rs4.close();
 			}
 		}
-	}
-	/**/
-	public static void main(String[] args) throws Exception{
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		String input=br.readLine();
-		studentReport(Integer.valueOf(input));
-		viewTimeTable(Integer.valueOf(input));
 	}
 }
