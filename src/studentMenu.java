@@ -7,7 +7,7 @@ import com.tmax.tibero.jdbc.*;
 import com.tmax.tibero.jdbc.ext.*;
 
 
-/*written by ìœ¤ì§„ì£¼ */
+/*written by À±ÁøÁÖ */
 
 public class studentMenu {
 	
@@ -17,13 +17,13 @@ public class studentMenu {
 		Connection conn=DriverManager.getConnection(Main.DATABASE_URL,Main.USERNAME,Main.PASSWORD);
 		
 		
-		/*student(ID, name, dept_name, tot_credit)ì´ ì „ë¶€ ë“¤ì–´ìˆê³ , IDëŠ”  studentì˜ super key ì´ë¯€ë¡œ  ì˜¬ë°”ë¥¸ studentIDì´ ì£¼ì›Œì§€ë©´ ë‚˜ë¨¸ì§€ëŠ” ì •ë³´ë“¤ì„ ì°¾ì„ ìˆ˜ ìˆë‹¤.*/
+		/*student(ID, name, dept_name, tot_credit)ÀÌ ÀüºÎ µé¾îÀÖ°í, ID´Â  studentÀÇ super key ÀÌ¹Ç·Î  ¿Ã¹Ù¸¥ studentIDÀÌ ÁÖ¿öÁö¸é ³ª¸ÓÁö´Â Á¤º¸µéÀ» Ã£À» ¼ö ÀÖ´Ù.*/
 		
 		PreparedStatement pstmt1 = conn.prepareStatement("SELECT name, dept_name, tot_cred"+" FROM student "+"Where ID=?");
 		pstmt1.setInt(1,stuID);
 		ResultSet rs=pstmt1.executeQuery();
 		
-		/* rs(name, dept_name, tot_credit) ìœ¼ë¡œ êµ¬ì„±ë˜ì–´ì ¸ ìˆê³ , get***í•¨ìˆ˜ë¥¼ ì´ìš©í•´  rsì˜ ì •ë³´ë¥¼ ê°€ì ¸ì˜¨ë‹¤.*/
+		/* rs(name, dept_name, tot_credit) À¸·Î ±¸¼ºµÇ¾îÁ® ÀÖ°í, get***ÇÔ¼ö¸¦ ÀÌ¿ëÇØ  rsÀÇ Á¤º¸¸¦ °¡Á®¿Â´Ù.*/
 		
 		while(rs.next()){
 			System.out.println("Welcome "+rs.getString(1));
@@ -34,19 +34,19 @@ public class studentMenu {
 		System.out.println();
 		System.out.println("Semester report");
 		
-		/*studentê°€ ë“¤ì€ ê³¼ëª©ì„ ì¡°ì‚¬í•˜ê¸° ìœ„í•´,
-		 takes.Id=studentIDì¼ ê²½ìš° takes ì™€  course_id ë¥¼  natural join í•´ì„œ (year, semester, course_id ,title, dept_name, credits, grade)ë¡œ ì´ë£¨ì–´ì§„ result setì„ ë§Œë“ ë‹¤.
-		 ë‹¨, order by êµ¬ë¬¸ê³¼ case êµ¬ë¬¸ì„ ì„ í™œìš©í•˜ì—¬ (year, semester)ìˆœìœ¼ë¡œ ì •ë ¬í•œë‹¤. */
+		/*student°¡ µéÀº °ú¸ñÀ» Á¶»çÇÏ±â À§ÇØ,
+		 takes.Id=studentIDÀÏ °æ¿ì takes ¿Í  course_id ¸¦  natural join ÇØ¼­ (year, semester, course_id ,title, dept_name, credits, grade)·Î ÀÌ·ç¾îÁø result setÀ» ¸¸µç´Ù.
+		 ´Ü, order by ±¸¹®°ú case ±¸¹®À» À» È°¿ëÇÏ¿© (year, semester)¼øÀ¸·Î Á¤·ÄÇÑ´Ù. */
 		
 		PreparedStatement pstmt2=conn.prepareStatement("SELECT year, semester, course_id, title, dept_name, credits, grade "+"From takes natural join course "+"Where takes.ID=? "
 														+"order by year desc,(case semester when 'Spring' then 4 when 'Summer' then 3 when 'Fall' then 2 when 'Winter' then 1 else 5 end)");
 		pstmt2.setInt(1,stuID);
 		ResultSet rs2=pstmt2.executeQuery();
 		
-		/*studentì˜ í•™ê¸°ë‹¹ gpaì™€ í•™ê¸°ë‹¹ ë“¤ì€ ê³¼ëª©ìˆ˜ë¥¼ countí•˜ëŠ” result setì„ êµ¬í•˜ëŠ” query
-		 group by êµ¬ë¬¸ì„ í™œìš©í•˜ì—¬ (year, semester)ë¡œ ë¬¶ì–´ì£¼ê³  case êµ¬ë¬¸ì„ í™œìš©í•˜ì—¬  A,B,Cë¡œ ì£¼ì–´ì§„ gradeë¥¼ ìˆ«ìë¡œ ë°”ê¾¼ë‹¤ 
-		 count(course_id) : í•™ê¸°ë‹¹ ë“¤ì€ ê³¼ëª© ìˆ˜ 
-		 count(grade) : í•™ê¸°ë‹¹ ë“¤ì€ ê³¼ëª© ìˆ˜ ì—ì„œ ì„±ì  nullì¸ ê³¼ëª©ì„ ì œì™¸í•œ ìˆ˜ 
+		/*studentÀÇ ÇĞ±â´ç gpa¿Í ÇĞ±â´ç µéÀº °ú¸ñ¼ö¸¦ countÇÏ´Â result setÀ» ±¸ÇÏ´Â query
+		 group by ±¸¹®À» È°¿ëÇÏ¿© (year, semester)·Î ¹­¾îÁÖ°í case ±¸¹®À» È°¿ëÇÏ¿©  A,B,C·Î ÁÖ¾îÁø grade¸¦ ¼ıÀÚ·Î ¹Ù²Û´Ù 
+		 count(course_id) : ÇĞ±â´ç µéÀº °ú¸ñ ¼ö 
+		 count(grade) : ÇĞ±â´ç µéÀº °ú¸ñ ¼ö ¿¡¼­ ¼ºÀû nullÀÎ °ú¸ñÀ» Á¦¿ÜÇÑ ¼ö 
 		 */
 		
 		PreparedStatement pstmt3=conn.prepareStatement("select year, semester, count(course_id),count(grade), "+"sum((case grade "
@@ -63,18 +63,18 @@ public class studentMenu {
 		pstmt3.setInt(1,stuID);
 		ResultSet rs3=pstmt3.executeQuery();
 		
-		/*rs3ì— ìˆëŠ” (year, semester) ë³„ gpaì™€ rs2ì— ì •ë ¬ëœ (year, semester) ìˆœìœ¼ë¡œ ì •ë ¬ëœ ì¶œë ¥í•´ì•¼ í•˜ëŠ” ì •ë³´ë“¤ì„ ì¶œë ¥ */
+		/*rs3¿¡ ÀÖ´Â (year, semester) º° gpa¿Í rs2¿¡ Á¤·ÄµÈ (year, semester) ¼øÀ¸·Î Á¤·ÄµÈ Ãâ·ÂÇØ¾ß ÇÏ´Â Á¤º¸µéÀ» Ãâ·Â */
 		while(rs3.next()){
 			int y=rs3.getInt(1);
 			String sem=rs3.getString(2);
-			if(rs3.getInt(3)!=rs3.getInt(4))				// count(course_id) ì™€ count(grade)ê°€ ë‹¤ë¥´ë©´  ê³¼ëª© ì„±ì  ì¤‘ null ê°’ì´ ì¡´ì¬ í•œë‹¤ëŠ” ì´ì•¼ê¸°									
+			if(rs3.getInt(3)!=rs3.getInt(4))				// count(course_id) ¿Í count(grade)°¡ ´Ù¸£¸é  °ú¸ñ ¼ºÀû Áß null °ªÀÌ Á¸Àç ÇÑ´Ù´Â ÀÌ¾ß±â									
 				System.out.println("\n"+y+" "+sem+" GPA : ");
 			else
 				System.out.println("\n"+y+" "+sem+" GPA : "+rs3.getFloat(5));
 			System.out.println("course_id		title		dept_name		credits		grade");
-			/*rs3ì˜ ì„¸ë²ˆì§¸ ì—´ì—ëŠ” (year, semester)ì—  ë“¤ì€ ê³¼ëª©ì˜ ìˆ˜ê°€ ìˆë‹¤.
-			 ê·¸  ìˆ˜ ë§Œí¼  rs2ì—ì„œ ê³¼ëª©ì„ ì¶œë ¥í•´ì¤€ë‹¤
-			(rs2ì™€ rs3ê°€ ê°™ì€ tableë¡œ ë¶€í„° ì¶”ì¶œëœ sqlì´ê³  ë™ì¼í•œ ì¡°ê±´ìœ¼ë¡œ ì •ë ¬ í–ˆìœ¼ë¯€ë¡œ  rs2ì™€ rs3ì˜ yearì™€ semesterëŠ” ë¹„êµì•ˆí•´ë„ ëœë‹¤.(ì •í™•ì„±ì„ ìœ„í•´ì„œëŠ” í•˜ëŠ”ê²Œ ì¢‹ë‹¤.))*/
+			/*rs3ÀÇ ¼¼¹øÂ° ¿­¿¡´Â (year, semester)¿¡  µéÀº °ú¸ñÀÇ ¼ö°¡ ÀÖ´Ù.
+			 ±×  ¼ö ¸¸Å­  rs2¿¡¼­ °ú¸ñÀ» Ãâ·ÂÇØÁØ´Ù
+			(rs2¿Í rs3°¡ °°Àº table·Î ºÎÅÍ ÃßÃâµÈ sqlÀÌ°í µ¿ÀÏÇÑ Á¶°ÇÀ¸·Î Á¤·Ä ÇßÀ¸¹Ç·Î  rs2¿Í rs3ÀÇ year¿Í semester´Â ºñ±³¾ÈÇØµµ µÈ´Ù.(Á¤È®¼ºÀ» À§ÇØ¼­´Â ÇÏ´Â°Ô ÁÁ´Ù.))*/
 			for(int i=0;i<rs3.getInt(3);i++){						
 				if(rs2.next()){
 					if(rs2.getString(7)==null)
@@ -102,7 +102,7 @@ public class studentMenu {
 		
 		System.out.println("Please select semester to view");
 		
-		/*stuidë¥¼ ê°€ì§€ê³  takesì—ì„œ (year, semester) distinctí•˜ê²Œ ì¶”ì¶œ */
+		/*stuid¸¦ °¡Áö°í takes¿¡¼­ (year, semester) distinctÇÏ°Ô ÃßÃâ */
 		PreparedStatement pstmt1 = conn.prepareStatement("select distinct year, semester "
 				+"from takes "
 				+"where takes.ID=? "
@@ -110,7 +110,7 @@ public class studentMenu {
 										+"when 'Fall' then 2 when 'Winter' then 1 else 5 end)");
 		pstmt1.setInt(1,stuID);
 		ResultSet rs1=pstmt1.executeQuery();
-		/*ì¶”ì¶œí•œ (year,semester)ì„ ì¶œë ¥*/
+		/*ÃßÃâÇÑ (year,semester)À» Ãâ·Â*/
 		while(rs1.next()){
 			System.out.println((i++)+") "+rs1.getInt(1)+"   "+rs1.getString(2));
 		}
@@ -118,24 +118,24 @@ public class studentMenu {
 		
 		flag = sc.nextInt();
 		
-		if(flag<i){ 			// ì£¼ì–´ì§„ ë³´ê¸° ë²ˆí˜¸ê°€ ì•„ë‹Œ ë‹¤ë¥¸ ë²ˆí˜¸ë¥¼ ê³ ë¥¼ ê²½ìš° ì²˜ë¦¬, ì›ë˜ë¼ë©´ ë‹¤ì–‘í•˜ê²Œ í•´ì¤˜ì•¼ í•˜ëŠ”ë° ê·¸ëƒ¥ ë” í° ë²ˆí˜¸ë¥¼ ì…ë ¥í–ˆì„ ë•Œë§Œ ì²˜ë¦¬
+		if(flag<i){ 			// ÁÖ¾îÁø º¸±â ¹øÈ£°¡ ¾Æ´Ñ ´Ù¸¥ ¹øÈ£¸¦ °í¸¦ °æ¿ì Ã³¸®, ¿ø·¡¶ó¸é ´Ù¾çÇÏ°Ô ÇØÁà¾ß ÇÏ´Âµ¥ ±×³É ´õ Å« ¹øÈ£¸¦ ÀÔ·ÂÇßÀ» ¶§¸¸ Ã³¸®
 		
-			/*Result set rs1ì˜ ì»¤ì„œë¥¼ ë‹¤ì‹œ ì²« rowë¡œ ê°€ë¥´í‚¤ëŠ” ê²ƒì´ ì•ˆë˜ì„œ ìƒˆë¡­ê²Œ result setì„ ë§Œë“¤ìŒ*/
+			/*Result set rs1ÀÇ Ä¿¼­¸¦ ´Ù½Ã Ã¹ row·Î °¡¸£Å°´Â °ÍÀÌ ¾ÈµÇ¼­ »õ·Ó°Ô result setÀ» ¸¸µéÀ½*/
 			rs1.close();
 			rs1=pstmt1.executeQuery();
 			
 			System.out.println("course_id	title	day		start_time	end_time");
 			
-			/*result set ì˜ ì„ì˜ì˜ rowë¥¼ ê°€ë¥´í‚¤ëŠ” ê¸°ëŠ¥ì´ ì•ˆë˜ë¯€ë¡œ ì‚¬ìš©ìê°€ ì„ íƒí•œ rowê¹Œì§€ rsì˜ ì»¤ì„œ ì´ë™ */
+			/*result set ÀÇ ÀÓÀÇÀÇ row¸¦ °¡¸£Å°´Â ±â´ÉÀÌ ¾ÈµÇ¹Ç·Î »ç¿ëÀÚ°¡ ¼±ÅÃÇÑ row±îÁö rsÀÇ Ä¿¼­ ÀÌµ¿ */
 			for(int j=0;j<flag;j++)
 				rs1.next();
 			
 			year=rs1.getInt(1);
 			seme=rs1.getString(2);														//
-			/*(year,semester)ê°€ ì£¼ì–´ì¡Œì„ ë•Œ (course_id, title, day, start_time, end_time)ì˜ ì •ë³´ë¥¼ ì¶œë ¥í•˜ê³  ì‹¶ì€ ë°
-			(course_id, title) ì€ courseì—ì„œ course_idê°€ super key ì´ë¯€ë¡œ course_idë§Œ ì•Œë©´ ì¶”ì¶œê°€ëŠ¥
-			(day, start_time, end_time)ë„ time_slot ì—ì„œ time_slot_idê°€ super keyì´ë¯€ë¡œ ì¶”ì¶œê°€ëŠ¥
-			ê·¸ë˜ì„œ takesì™€ sectionì„ natural joiní•˜ì—¬ course_idì™€ time_slot_idë¥¼ ì¶”ì¶œ*/
+			/*(year,semester)°¡ ÁÖ¾îÁ³À» ¶§ (course_id, title, day, start_time, end_time)ÀÇ Á¤º¸¸¦ Ãâ·ÂÇÏ°í ½ÍÀº µ¥
+			(course_id, title) Àº course¿¡¼­ course_id°¡ super key ÀÌ¹Ç·Î course_id¸¸ ¾Ë¸é ÃßÃâ°¡´É
+			(day, start_time, end_time)µµ time_slot ¿¡¼­ time_slot_id°¡ super keyÀÌ¹Ç·Î ÃßÃâ°¡´É
+			±×·¡¼­ takes¿Í sectionÀ» natural joinÇÏ¿© course_id¿Í time_slot_id¸¦ ÃßÃâ*/
 			PreparedStatement pstmt2=conn.prepareStatement("select course_id, time_slot_id "
 					+"from takes natural join section "
 					+"where (takes.ID,year,semester)=(?,?,?)");
@@ -155,14 +155,14 @@ public class studentMenu {
 			while(rs2.next()){
 				course=rs2.getString(1);
 				tsid=rs2.getString(2);
-				/*course_idë¥¼ ì´ìš©í•´ course_idì™€ title ì¶”ì¶œ*/
+				/*course_id¸¦ ÀÌ¿ëÇØ course_id¿Í title ÃßÃâ*/
 				
 				pstmt3.setString(1,course);
 				pstmt4.setString(1,tsid);
 				rs3=pstmt3.executeQuery();
 				rs4=pstmt4.executeQuery();
 				
-				/*time slot idë¥¼ ì´ìš©í•´ (day, start_time, end_time) ì¶”ì¶œ*/
+				/*time slot id¸¦ ÀÌ¿ëÇØ (day, start_time, end_time) ÃßÃâ*/
 				rs3.next();
 				title=rs3.getString(1);
 				while(rs4.next()){
