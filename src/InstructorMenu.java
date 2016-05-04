@@ -67,10 +67,9 @@ public class InstructorMenu {
 
 		/* Get more information of the lectures by joining tables 'course' and 'section' 
 		 * Get 7 attributes : year, semester, course_id, sec_id, title, building, room_number */
-		Statement stmt1 = conn.createStatement();
-		ResultSet rs1 = stmt1
-				.executeQuery("SELECT year, semester, course_id, sec_id, title, building, room_number FROM " + courseSql
-						+ " NATURAL JOIN course NATURAL JOIN section" + " ORDER BY course_id ASC");
+		PreparedStatement pstmt1 = conn.prepareStatement("SELECT year, semester, course_id, sec_id, title, building, room_number FROM " + courseSql
+				+ " NATURAL JOIN course NATURAL JOIN section" + " ORDER BY course_id ASC");
+		ResultSet rs1 = pstmt1.executeQuery();
 
 		boolean loopNotExecuted = true;		// Determine whether to print phrase "Course report - ..."
 
@@ -94,11 +93,14 @@ public class InstructorMenu {
 
 			/* Get information of lecture days and time, 
 			 * from (section NATURAL JOIN time_slot) */
-			Statement stmt2 = conn.createStatement();
-			ResultSet rs2 = stmt2.executeQuery("SELECT day, start_hr, start_min, end_hr, end_min"
-					+ " FROM section NATURAL JOIN time_slot" + " WHERE course_id = " + "'" + courseID + "'"
-					+ " AND sec_id = " + sectionID + " AND semester = " + "'" + semester + "'" + " AND year = " + year);
-
+			PreparedStatement pstmt2 = conn.prepareStatement("SELECT day, start_hr, start_min, end_hr, end_min"
+					+ " FROM section NATURAL JOIN time_slot" + " WHERE (course_id, sec_id, semester, year) = (?,?,?,?)");
+			pstmt2.setString(1, courseID);
+			pstmt2.setInt(2, sectionID);
+			pstmt2.setString(3, semester);
+			pstmt2.setInt(4, year);
+			ResultSet rs2 = pstmt2.executeQuery();
+			
 			/* Store days and lecture time */
 			String days = "";
 			int time[] = new int[4];
@@ -113,7 +115,7 @@ public class InstructorMenu {
 
 			/* Close the connection */
 			rs2.close();
-			stmt2.close();
+			pstmt2.close();
 
 			/* Print the basic info of lecture in format
 			 * e.g. FIN-201	Investment Banking	[Packard 101] (F, M, W, 9 : 0 - 9 : 50) */
@@ -122,10 +124,13 @@ public class InstructorMenu {
 
 			/* Get information of students who takes the lecture,
 			 * from (student NATURAL JOIN takes) */
-			Statement stmt3 = conn.createStatement();
-			ResultSet rs3 = stmt3.executeQuery("SELECT ID, name, dept_name, grade" + " FROM student NATURAL JOIN takes"
-					+ " WHERE course_id = " + "'" + courseID + "'" + " AND sec_id = " + sectionID + " AND semester = "
-					+ "'" + semester + "'" + " AND year = " + year);
+			PreparedStatement pstmt3 = conn.prepareStatement("SELECT ID, name, dept_name, grade" + " FROM student NATURAL JOIN takes"
+					+ " WHERE (course_id, sec_id, semester, year) = (?,?,?,?)");
+			pstmt3.setString(1, courseID);
+			pstmt3.setInt(2, sectionID);
+			pstmt3.setString(3, semester);
+			pstmt3.setInt(4, year);
+			ResultSet rs3 = pstmt3.executeQuery();
 
 			/* Get metadata for printing formatted table, and print it */
 			ResultSetMetaData rsmd3 = rs3.getMetaData();
@@ -143,12 +148,12 @@ public class InstructorMenu {
 
 			/* Close the connection */
 			rs3.close();
-			stmt3.close();
+			pstmt3.close();
 		}
 
 		/* Close the connection */
 		rs1.close();
-		stmt1.close();
+		pstmt1.close();
 		conn.close();
 	}
 }
