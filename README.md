@@ -48,7 +48,7 @@ Configuration
 Environment variables, such as `JDBC_DRIVER`, `HOST`, `PORT`, `DATABASE_URL`, `USERNAME`, `PASSWORD`, are located in `Main.java`. They are shared by other classes in the project, so editing variables in `Main.java` will make effects to the whole project. In default, they are set as :
 
 	JDBC_DRIVER = "com.tmax.tibero.jdbc.TbDriver";
-	HOST = "192.168.0.106";
+	HOST = "localhost";
 	PORT = "8629";
 	DATABASE_URL = "jdbc:tibero:thin:@" + HOST + ":" + PORT + ":tibero";
 	USERNAME = "sys";
