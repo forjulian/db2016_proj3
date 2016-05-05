@@ -84,6 +84,8 @@ public class studentMenu {
 				}
 			}
 		}
+		System.out.println();
+		
 		rs3.close();
 		rs2.close();
 		rs.close();
@@ -114,7 +116,7 @@ public class studentMenu {
 		while(rs1.next()){
 			System.out.println((i++)+") "+rs1.getInt(1)+"   "+rs1.getString(2));
 		}
-		System.out.print(">>");
+		System.out.print(">> ");
 		
 		flag = sc.nextInt();
 		
@@ -166,7 +168,7 @@ public class studentMenu {
 				rs3.next();
 				title=rs3.getString(1);
 				while(rs4.next()){
-					System.out.println(course+"	"+title+"	"+rs4.getString(1)+"	"+rs4.getInt(2)+":"+rs4.getInt(3)+"		"+rs4.getInt(4)+" : "+rs4.getInt(5));
+					System.out.println(course+"	"+title+"	"+rs4.getString(1)+"	"+rs4.getInt(2)+" : "+rs4.getInt(3)+"		"+rs4.getInt(4)+" : "+rs4.getInt(5));
 				}	
 				rs3.close();
 				rs4.close();
@@ -176,6 +178,8 @@ public class studentMenu {
 			pstmt3.close();
 			pstmt4.close();
 		}
+		System.out.println();
+		
 		rs1.close();
 		pstmt1.close();
 		conn.close();

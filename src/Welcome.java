@@ -110,6 +110,7 @@ public class Welcome {
 	        System.out.println("1) Student report");
 	        System.out.println("2) View time table");
 	        System.out.println("0) Exit");
+	        System.out.print(">> ");
 	        
 			String input = br.readLine();
 
@@ -130,8 +131,9 @@ public class Welcome {
 		while (true) {
 			System.out.println("Please select instructor menu");
 	        System.out.println("1) Course report");
-	        System.out.println("2) Advisee");
+	        System.out.println("2) Advisee report");
 	        System.out.println("0) Exit");
+	        System.out.print(">> ");
 	        
 			String input = br.readLine();
 

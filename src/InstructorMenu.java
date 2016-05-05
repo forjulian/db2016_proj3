@@ -40,6 +40,7 @@ public class InstructorMenu {
 			System.out.println(
 					rs.getString(1) + "\t\t" + rs.getString(2) + "\t\t" + rs.getString(3) + "\t\t\t" + rs.getInt(4));
 		}
+		System.out.println();
 
 		/* Close the connections */
 		rs.close();
@@ -150,6 +151,7 @@ public class InstructorMenu {
 			rs3.close();
 			pstmt3.close();
 		}
+		System.out.println();
 
 		/* Close the connection */
 		rs1.close();
